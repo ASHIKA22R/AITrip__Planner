@@ -569,3 +569,116 @@ document.getElementById("themeToggle")
         : "🌙 Dark Mode";
 
 });
+// =======================================
+// FREE MAP (Leaflet + OpenStreetMap)
+// =======================================
+
+async function loadMap(place) {
+
+    const mapSection = document.getElementById("mapSection");
+
+    mapSection.classList.remove("hidden");
+
+
+    try {
+
+        // Convert place name to coordinates
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
+        );
+
+
+        const data = await response.json();
+
+
+        if (!data.length) {
+
+            alert("Location not found");
+            return;
+
+        }
+
+
+        const lat = Number(data[0].lat);
+        const lon = Number(data[0].lon);
+
+
+
+        // Create map first time
+        if (!map) {
+
+
+            map = L.map("map").setView(
+                [lat, lon],
+                13
+            );
+
+
+            L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution:
+                    '&copy; OpenStreetMap contributors'
+                }
+            ).addTo(map);
+
+
+        }
+
+        else {
+
+
+            // Update existing map
+
+            map.setView(
+                [lat, lon],
+                13
+            );
+
+
+            if(marker){
+
+                map.removeLayer(marker);
+
+            }
+
+        }
+
+
+
+        // Add marker
+
+        marker = L.marker(
+            [lat, lon]
+        )
+        .addTo(map)
+        .bindPopup(
+            `📍 ${place}`
+        )
+        .openPopup();
+
+
+
+        // Fix hidden div issue
+
+        setTimeout(() => {
+
+            map.invalidateSize();
+
+        }, 300);
+
+
+
+    }
+
+
+    catch(error) {
+
+        console.log(
+            "Map Error:",
+            error
+        );
+
+    }
+
+}
