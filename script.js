@@ -277,9 +277,21 @@ async function loadMap(place) {
             .bindPopup(place)
             .openPopup();
 
+        // Force Leaflet to recalculate the map size after the
+        // container becomes visible (it was "display:none" when
+        // the map was first created, so Leaflet initially measures
+        // it as 0x0). Two passes catch slow layout/reflow timing.
         setTimeout(() => {
             map.invalidateSize();
-        }, 200);
+        }, 100);
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 500);
+
+        window.addEventListener("resize", () => {
+            map.invalidateSize();
+        });
 
     }
 
