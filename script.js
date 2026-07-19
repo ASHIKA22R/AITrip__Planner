@@ -615,7 +615,7 @@ async function loadMap(place) {
 
 
             L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
                     attribution:
                     '&copy; OpenStreetMap contributors'
