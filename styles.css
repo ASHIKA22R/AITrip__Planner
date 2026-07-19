@@ -1,123 +1,820 @@
-/* ===============================
-   AI Travel Planner CSS
-   Glassmorphism UI
-================================ */
-
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+/* =======================================
+   AI Travel Planner - Part 1
+======================================= */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
 }
-
-
 
 body{
 
+    font-family:'Poppins',sans-serif;
+
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+
     min-height:100vh;
+
+    color:#333;
+
+    transition:.4s;
+
+}
+
+.container{
+
+    width:90%;
+
+    max-width:1200px;
+
+    margin:40px auto;
+
+}
+
+/* ================= Header ================= */
+
+header{
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:30px;
+
+}
+
+header h1{
+
+    font-size:3rem;
+
+    margin-bottom:10px;
+
+    font-weight:700;
+
+}
+
+header p{
+
+    font-size:1.1rem;
+
+    opacity:.9;
+
+}
+
+/* ================= Top Controls ================= */
+
+.top-controls{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+}
+
+.top-controls button{
+
+    border:none;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    background:white;
+
+    color:#333;
+
+    transition:.3s;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.top-controls button:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* ================= Form ================= */
+
+.form-container{
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(20px);
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+    margin-bottom:30px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    margin-bottom:20px;
+
+}
+
+.form-group label{
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.form-group input,
+.form-group select{
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    outline:none;
+
+    background:white;
+
+}
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+/* ================= Generate Button ================= */
+
+form button{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:#0077ff;
+
+    color:white;
+
+    transition:.3s;
+
+}
+
+form button:hover{
+
+    background:#005edc;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(0,0,0,.25);
+
+}
+
+.hidden{
+
+    display:none;
+
+}
+/* =======================================
+   AI Travel Planner - Part 2
+======================================= */
+
+/* ================= Loading ================= */
+
+.loading{
+
+    text-align:center;
+
+    margin:30px 0;
+
+}
+
+.spinner{
+
+    width:70px;
+
+    height:70px;
+
+    border:8px solid rgba(255,255,255,.3);
+
+    border-top:8px solid #fff;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    animation:spin 1s linear infinite;
+
+}
+
+.loading p{
+
+    margin-top:15px;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:600;
+
+}
+
+@keyframes spin{
+
+    100%{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ================= Dashboard ================= */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:20px;
+
+    margin:35px 0;
+
+}
+
+.card{
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    text-align:center;
+
+    color:white;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.2);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.card h3{
+
+    margin-bottom:15px;
+
+    font-size:22px;
+
+}
+
+.card p{
+
+    font-size:18px;
+
+    font-weight:600;
+
+}
+
+/* ================= Results ================= */
+
+.results{
+
+    margin-top:35px;
+
+}
+
+.results h2{
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:25px;
+
+    font-size:30px;
+
+}
+
+/* ================= Table ================= */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+
+    border-radius:15px;
+
+    background:white;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+}
+
+thead{
+
+    background:#0077ff;
+
+    color:white;
+
+}
+
+th{
+
+    padding:18px;
+
+    font-size:17px;
+
+}
+
+td{
+
+    padding:16px;
+
+    text-align:center;
+
+    border-bottom:1px solid #eee;
+
+    font-size:15px;
+
+}
+
+tbody tr:nth-child(even){
+
+    background:#f8f9fa;
+
+}
+
+tbody tr:hover{
+
+    background:#eaf4ff;
+
+}
+
+/* ================= Action Buttons ================= */
+
+.buttons{
 
     display:flex;
 
     justify-content:center;
 
-    align-items:center;
+    gap:20px;
 
-    padding:30px;
+    margin-top:30px;
 
-
-    background:
-    linear-gradient(
-        135deg,
-        #0f172a,
-        #1d4ed8,
-        #06b6d4
-    );
-
-
-    background-size:300% 300%;
-
-    animation:bgAnimation 12s infinite;
+    flex-wrap:wrap;
 
 }
 
+.buttons button{
 
+    padding:15px 25px;
 
-@keyframes bgAnimation{
+    border:none;
 
-    0%{
-        background-position:0% 50%;
-    }
+    border-radius:12px;
 
+    cursor:pointer;
 
-    50%{
-        background-position:100% 50%;
-    }
+    font-size:16px;
 
+    font-weight:bold;
 
-    100%{
-        background-position:0% 50%;
-    }
+    background:#0077ff;
+
+    color:white;
+
+    transition:.3s;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
 
 }
 
+.buttons button:hover{
 
+    background:#005edc;
 
+    transform:translateY(-3px);
 
+}
+/* =======================================
+   AI Travel Planner - Part 3
+======================================= */
 
+/* ================= Map ================= */
 
-.container{
+#mapSection{
 
+    margin-top:40px;
+
+}
+
+#mapSection h2{
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:20px;
+
+}
+
+#map{
 
     width:100%;
 
-    max-width:950px;
+    height:450px;
 
+    border-radius:20px;
 
-    padding:35px;
+    overflow:hidden;
 
-
-    border-radius:25px;
-
-
-    background:
-    rgba(255,255,255,0.12);
-
-
-    backdrop-filter:blur(18px);
-
-
-    border:
-    1px solid rgba(255,255,255,.25);
-
-
-    box-shadow:
-    0 25px 50px rgba(0,0,0,.35);
-
-
-    animation:
-    slideUp .8s ease;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
 
 }
 
+/* ================= Hotel Cards ================= */
 
+#hotelCards{
 
+    margin-top:40px;
 
+}
 
-@keyframes slideUp{
+#hotelCards h2{
 
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:20px;
+
+}
+
+.hotel-container{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:20px;
+
+}
+
+.hotel-card{
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    text-align:center;
+
+    color:white;
+
+    transition:.3s;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.2);
+
+}
+
+.hotel-card:hover{
+
+    transform:translateY(-6px) scale(1.02);
+
+}
+
+.hotel-card h3{
+
+    margin-bottom:10px;
+
+    font-size:22px;
+
+}
+
+.hotel-card p{
+
+    margin:8px 0;
+
+    font-size:16px;
+
+}
+
+/* ================= Destination Images ================= */
+
+#destinationImages{
+
+    margin-top:45px;
+
+}
+
+#destinationImages h2{
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:20px;
+
+}
+
+.image-container{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:20px;
+
+}
+
+.place-image{
+
+    width:100%;
+
+    height:220px;
+
+    object-fit:cover;
+
+    border-radius:18px;
+
+    transition:.4s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+
+}
+
+.place-image:hover{
+
+    transform:scale(1.05);
+
+}
+
+/* ================= Saved Trips ================= */
+
+.saved-trips{
+
+    margin-top:50px;
+
+}
+
+.saved-trips h2{
+
+    text-align:center;
+
+    color:white;
+
+    margin-bottom:20px;
+
+}
+
+#tripList{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:20px;
+
+}
+
+.trip-card{
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    padding:22px;
+
+    color:white;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.2);
+
+    transition:.3s;
+
+}
+
+.trip-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.trip-card h3{
+
+    margin-bottom:12px;
+
+}
+
+.trip-card p{
+
+    margin:8px 0;
+
+    font-size:15px;
+
+}
+/* =======================================
+   AI Travel Planner - Part 4
+======================================= */
+
+/* ================= Dark Mode ================= */
+
+body.dark{
+
+    background:#111827;
+
+    color:#f3f4f6;
+
+}
+
+body.dark .form-container,
+body.dark .card,
+body.dark .hotel-card,
+body.dark .trip-card{
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+}
+
+body.dark table{
+
+    background:#1f2937;
+
+    color:white;
+
+}
+
+body.dark thead{
+
+    background:#2563eb;
+
+}
+
+body.dark tbody tr:nth-child(even){
+
+    background:#374151;
+
+}
+
+body.dark tbody tr:hover{
+
+    background:#4b5563;
+
+}
+
+body.dark input,
+body.dark select{
+
+    background:#374151;
+
+    color:white;
+
+    border:1px solid #4b5563;
+
+}
+
+body.dark input::placeholder{
+
+    color:#d1d5db;
+
+}
+
+body.dark button{
+
+    transition:.3s;
+
+}
+
+/* ================= Responsive ================= */
+
+@media(max-width:768px){
+
+    .container{
+
+        width:95%;
+
+    }
+
+    header h1{
+
+        font-size:2.2rem;
+
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .top-controls{
+
+        flex-direction:column;
+
+    }
+
+    .top-controls button{
+
+        width:100%;
+
+    }
+
+    .buttons{
+
+        flex-direction:column;
+
+    }
+
+    .buttons button{
+
+        width:100%;
+
+    }
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+        white-space:nowrap;
+
+    }
+
+    #map{
+
+        height:300px;
+
+    }
+
+}
+
+/* ================= Animations ================= */
+
+@keyframes fadeIn{
 
     from{
 
         opacity:0;
 
-        transform:translateY(40px);
+        transform:translateY(20px);
 
     }
-
 
     to{
 
@@ -129,674 +826,74 @@ body{
 
 }
 
+.form-container,
+.dashboard,
+.results,
+#hotelCards,
+#destinationImages,
+.saved-trips,
+#mapSection{
 
-
-
-
-
-header{
-
-    text-align:center;
-
-    margin-bottom:30px;
-
-}
-
-
-
-header h1{
-
-
-    color:white;
-
-    font-size:40px;
-
+    animation:fadeIn .6s ease;
 
 }
 
+/* ================= Scrollbar ================= */
 
+::-webkit-scrollbar{
 
-header p{
-
-
-    color:#dbeafe;
-
-    margin-top:10px;
-
+    width:10px;
 
 }
 
+::-webkit-scrollbar-track{
 
-
-
-
-
-/* Buttons */
-
-
-button{
-
-
-    border:none;
-
-
-    padding:14px 20px;
-
-
-    border-radius:12px;
-
-
-    background:
-    linear-gradient(
-        135deg,
-        #06b6d4,
-        #2563eb
-    );
-
-
-    color:white;
-
-
-    font-size:16px;
-
-
-    font-weight:600;
-
-
-    cursor:pointer;
-
-
-    transition:.3s;
-
+    background:#e5e7eb;
 
 }
 
+::-webkit-scrollbar-thumb{
 
-
-button:hover{
-
-
-    transform:translateY(-3px);
-
-
-    box-shadow:
-    0 15px 30px rgba(0,0,0,.3);
-
-
-}
-
-
-
-
-
-
-.top-controls{
-
-
-    display:flex;
-
-    gap:15px;
-
-    margin-bottom:25px;
-
-
-}
-
-
-
-.top-controls button{
-
-
-    width:auto;
-
-}
-
-
-
-
-
-/* Form */
-
-
-.row{
-
-
-    display:grid;
-
-
-    grid-template-columns:
-    1fr 1fr;
-
-
-    gap:20px;
-
-
-}
-
-
-
-.form-group{
-
-
-    margin-bottom:20px;
-
-
-}
-
-
-
-label{
-
-
-    display:block;
-
-
-    color:white;
-
-
-    margin-bottom:8px;
-
-
-    font-weight:500;
-
-
-}
-
-
-
-
-
-input,
-select{
-
-
-    width:100%;
-
-
-    padding:14px;
-
-
-    border-radius:12px;
-
-
-    border:none;
-
-
-    outline:none;
-
-
-    color:white;
-
-
-    background:
-    rgba(255,255,255,.18);
-
-
-    border:
-    1px solid rgba(255,255,255,.3);
-
-
-}
-
-
-
-input::placeholder{
-
-
-    color:#e5e7eb;
-
-
-}
-
-
-
-select option{
-
-
-    color:black;
-
-
-}
-
-
-
-
-
-
-
-
-/* Loading */
-
-
-.hidden{
-
-    display:none;
-
-}
-
-
-
-
-.loading{
-
-
-    text-align:center;
-
-
-    color:white;
-
-
-    margin:30px;
-
-
-}
-
-
-
-
-.spinner{
-
-
-    width:55px;
-
-
-    height:55px;
-
-
-    border-radius:50%;
-
-
-    border:
-    5px solid rgba(255,255,255,.3);
-
-
-    border-top:
-    5px solid white;
-
-
-    margin:auto;
-
-
-    animation:
-    spin 1s linear infinite;
-
-
-}
-
-
-
-@keyframes spin{
-
-
-    from{
-
-        transform:rotate(0);
-
-    }
-
-
-    to{
-
-        transform:rotate(360deg);
-
-    }
-
-}
-
-
-
-
-
-
-
-/* Dashboard */
-
-
-.dashboard{
-
-
-    display:grid;
-
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-
-    gap:20px;
-
-
-    margin-top:30px;
-
-
-}
-
-
-
-
-.card{
-
-
-    padding:25px;
-
-
-    text-align:center;
-
-
-    color:white;
-
+    background:#2563eb;
 
     border-radius:20px;
 
+}
 
-    background:
-    rgba(255,255,255,.15);
+::-webkit-scrollbar-thumb:hover{
 
-
-    backdrop-filter:blur(12px);
-
-
-    border:
-    1px solid rgba(255,255,255,.2);
-
-
-    transition:.3s;
-
+    background:#1d4ed8;
 
 }
 
+/* ================= Footer (Optional) ================= */
 
+footer{
 
-.card:hover{
-
-
-    transform:translateY(-5px);
-
-
-}
-
-
-
-
-
-
-
-/* Table */
-
-
-.results h2,
-#mapSection h2,
-#hotelCards h2,
-#destinationImages h2,
-.saved-trips h2{
-
-
-    color:white;
-
-
-    margin:25px 0;
-
-
-}
-
-
-
-table{
-
-
-    width:100%;
-
-
-    border-collapse:collapse;
-
-
-    overflow:hidden;
-
-
-}
-
-
-
-th{
-
-
-    background:
-    rgba(37,99,235,.8);
-
-
-}
-
-
-
-th,
-td{
-
-
-    padding:15px;
-
+    margin-top:50px;
 
     text-align:center;
 
-
     color:white;
-
-
-    border-bottom:
-    1px solid rgba(255,255,255,.2);
-
-
-}
-
-
-
-
-tr{
-
-
-    background:
-    rgba(255,255,255,.08);
-
-
-}
-
-
-
-
-
-
-
-/* Map */
-
-
-#map{
-    width:100%;
-    height:450px;
-     overflow:hidden;
-    border-radius:20px;
-}
-
-
-
-
-
-
-
-/* Hotel and Images */
-
-
-.hotel-container,
-.image-container{
-
-
-    display:grid;
-
-
-    grid-template-columns:
-    repeat(
-    auto-fit,
-    minmax(220px,1fr)
-    );
-
-
-    gap:20px;
-
-
-}
-
-
-
-.hotel-card{
-
 
     padding:20px;
 
+    opacity:.9;
+
+}
+
+footer a{
 
     color:white;
 
+    text-decoration:none;
 
-    border-radius:18px;
-
-
-    background:
-    rgba(255,255,255,.15);
-
-
-    backdrop-filter:blur(10px);
-
+    font-weight:bold;
 
 }
 
+footer a:hover{
 
-
-.place-image{
-
-
-    width:100%;
-
-
-    height:200px;
-
-
-    object-fit:cover;
-
-
-    border-radius:18px;
-
-
-}
-
-
-
-
-
-
-
-/* Saved Trips */
-
-
-.trip-card{
-
-
-    padding:20px;
-
-
-    margin-bottom:15px;
-
-
-    color:white;
-
-
-    border-radius:18px;
-
-
-    background:
-    rgba(255,255,255,.15);
-
-
-}
-
-
-
-
-
-
-
-/* Dark Mode */
-
-
-.dark{
-
-
-    background:
-    linear-gradient(
-        135deg,
-        #020617,
-        #111827
-    );
-
-}
-
-
-
-.dark .container{
-
-
-    background:
-    rgba(0,0,0,.35);
-
-
-}
-
-
-
-
-
-
-/* Mobile */
-
-
-@media(max-width:768px){
-
-
-    .container{
-
-        padding:20px;
-
-    }
-
-
-
-    header h1{
-
-        font-size:28px;
-
-    }
-
-
-
-    .row{
-
-        grid-template-columns:1fr;
-
-    }
-
-
-
-    .top-controls{
-
-        flex-direction:column;
-
-    }
-
-
-
-    table{
-
-        font-size:13px;
-
-    }
-
+    text-decoration:underline;
 
 }

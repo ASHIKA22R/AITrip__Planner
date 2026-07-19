@@ -234,13 +234,10 @@ async function getWeather(destination) {
 // FREE MAP (Leaflet + OpenStreetMap)
 // =======================================
 
-let map = null;
-let marker = null;
-
 async function loadMap(place) {
 
-    const mapSection = document.getElementById("mapSection");
-    mapSection.classList.remove("hidden");
+    document.getElementById("mapSection")
+        .classList.remove("hidden");
 
     try {
 
@@ -250,29 +247,30 @@ async function loadMap(place) {
 
         const data = await response.json();
 
-        if (data.length === 0) {
-            alert("Location not found");
-            return;
+        if (!data.length) return;
+
+        const lat = Number(data[0].lat);
+        const lon = Number(data[0].lon);
+
+        if (!map) {
+
+            map = L.map("map").setView([lat, lon], 12);
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution: "&copy; OpenStreetMap contributors"
+                }
+            ).addTo(map);
+
+        } else {
+
+            map.setView([lat, lon], 12);
+
+            if (marker)
+                map.removeLayer(marker);
+
         }
-
-        const lat = parseFloat(data[0].lat);
-        const lon = parseFloat(data[0].lon);
-
-        // Remove old map completely
-        if (map) {
-            map.remove();
-            map = null;
-        }
-
-        map = L.map("map").setView([lat, lon], 12);
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-                attribution: "&copy; OpenStreetMap contributors"
-            }
-        ).addTo(map);
 
         marker = L.marker([lat, lon])
             .addTo(map)
@@ -281,10 +279,14 @@ async function loadMap(place) {
 
         setTimeout(() => {
             map.invalidateSize();
-        }, 300);
+        }, 200);
 
-    } catch (err) {
+    }
+
+    catch (err) {
+
         console.error(err);
+
     }
 
 }
