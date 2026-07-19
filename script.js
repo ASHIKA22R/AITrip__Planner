@@ -1,9 +1,4 @@
-// =======================================
-// AI Travel Planner
-// Part 1
-// =======================================
 
-// Elements
 const travelForm = document.getElementById("travelForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");

@@ -110,7 +110,7 @@ header p{
 
 .form-container{
 
-    background:rgba(255,255,255,.18);
+    background:rgba(255,255,255,.25);
 
     backdrop-filter:blur(20px);
 
@@ -280,7 +280,7 @@ form button:hover{
 
 .card{
 
-    background:rgba(255,255,255,.18);
+    background:rgba(255,255,255,.25);
 
     backdrop-filter:blur(15px);
 
@@ -445,39 +445,39 @@ tbody tr:hover{
     transform:translateY(-3px);
 
 }
-/* =======================================
-   AI Travel Planner - Part 3
-======================================= */
-
-/* ================= Map ================= */
 
 #mapSection{
-
     margin-top:40px;
-
+    animation:fadeIn .6s ease;
 }
 
 #mapSection h2{
-
     text-align:center;
-
     color:white;
-
     margin-bottom:20px;
-
 }
 
 #map{
-
     width:100%;
-
-    height:450px;
-
-    border-radius:15px;
-
+    height:500px;
+    min-height:500px;
+    border-radius:20px;
     overflow:hidden;
-    display:block;
+    background:white;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    position:relative;
+    z-index:1;
+}
 
+/* Leaflet Fix */
+.leaflet-container{
+    width:100%;
+    height:100%;
+    border-radius:20px;
+}
+
+.leaflet-control-container{
+    z-index:999;
 }
 
 #hotelCards{
@@ -485,7 +485,30 @@ tbody tr:hover{
     margin-top:40px;
 
 }
+img{
+    max-width:100%;
+}
 
+input,select,button{
+    font-family:'Poppins',sans-serif;
+}
+
+@media(max-width:500px){
+
+    header h1{
+        font-size:1.8rem;
+    }
+
+    .form-container{
+        padding:20px;
+    }
+
+    #map{
+        height:350px;
+        min-height:350px;
+    }
+
+}
 #hotelCards h2{
 
     text-align:center;
