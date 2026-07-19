@@ -793,11 +793,7 @@ body.dark button{
 
     }
 
-    #map{
-
-        height:300px;
-
-    }
+   
 
 }
 
@@ -828,7 +824,9 @@ body.dark button{
 .results,
 #hotelCards,
 #destinationImages,
-.saved-trips,
+.saved-trips{
+    animation:fadeIn .6s ease;
+}
 
 
 
