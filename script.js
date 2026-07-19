@@ -230,10 +230,6 @@ async function getWeather(destination) {
 
 }
 
-// =======================================
-// FREE MAP (Leaflet + OpenStreetMap)
-// =======================================
-
 async function loadMap(place) {
 
     document.getElementById("mapSection")
@@ -241,63 +237,55 @@ async function loadMap(place) {
 
     try {
 
+        // Get coordinates
         const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
+            `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(place)}&apiKey=${GEOAPIFY_API_KEY}`
         );
 
         const data = await response.json();
 
-        if (!data.length) return;
+        if (!data.features.length) {
+            alert("Location not found");
+            return;
+        }
 
-        const lat = Number(data[0].lat);
-        const lon = Number(data[0].lon);
+        const lat = data.features[0].properties.lat;
+        const lon = data.features[0].properties.lon;
 
         if (!map) {
 
-            map = L.map("map").setView([lat, lon], 12);
+            map = L.map("map").setView([lat, lon], 13);
 
             L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                `https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_API_KEY}`,
                 {
-                    attribution: "&copy; OpenStreetMap contributors"
+                    attribution:
+                        '&copy; <a href="https://www.geoapify.com/">Geoapify</a> © OpenStreetMap contributors'
                 }
             ).addTo(map);
 
         } else {
 
-            map.setView([lat, lon], 12);
+            map.setView([lat, lon], 13);
 
-            if (marker)
+            if (marker) {
                 map.removeLayer(marker);
+            }
 
         }
 
         marker = L.marker([lat, lon])
             .addTo(map)
-            .bindPopup(place)
+            .bindPopup(`📍 ${place}`)
             .openPopup();
 
-        // Force Leaflet to recalculate the map size after the
-        // container becomes visible (it was "display:none" when
-        // the map was first created, so Leaflet initially measures
-        // it as 0x0). Two passes catch slow layout/reflow timing.
         setTimeout(() => {
             map.invalidateSize();
-        }, 100);
+        }, 300);
 
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 500);
+    } catch (error) {
 
-        window.addEventListener("resize", () => {
-            map.invalidateSize();
-        });
-
-    }
-
-    catch (err) {
-
-        console.error(err);
+        console.error("Geoapify Map Error:", error);
 
     }
 
@@ -521,36 +509,51 @@ function showSavedTrips() {
 
     }
 
-    trips.forEach((trip, index) => {
+trips.forEach((trip, index) => {
 
-        container.innerHTML += `
+    container.innerHTML += `
 
-        <div class="trip-card">
+    <div class="trip-card">
 
-            <h3>Trip ${index + 1}</h3>
+        <h3>Trip ${index + 1}</h3>
 
-            <p>🌍 ${trip.destination}</p>
+        <p>🌍 ${trip.destination}</p>
 
-            <p>📅 ${trip.startDate} - ${trip.endDate}</p>
+        <p>📅 ${trip.startDate} - ${trip.endDate}</p>
 
-            <p>💰 ${trip.budget}</p>
+        <p>💰 ${trip.budget}</p>
 
-            <p>👥 ${trip.travelers} Travelers</p>
+        <p>👥 ${trip.travelers} Travelers</p>
 
-            <p>✈ ${trip.transport}</p>
+        <p>✈ ${trip.transport}</p>
 
-            <p>🏨 ${trip.hotel}</p>
+        <p>🏨 ${trip.hotel}</p>
 
-        </div>
+        <button class="delete-btn" onclick="deleteTrip(${index})">
+            🗑 Delete
+        </button>
 
-        `;
+    </div>
 
-    });
+    `;
+
+});
 
     section.classList.remove("hidden");
 
 }
 
+function deleteTrip(index) {
+
+    let trips = JSON.parse(localStorage.getItem("savedTrips")) || [];
+
+    trips.splice(index, 1);
+
+    localStorage.setItem("savedTrips", JSON.stringify(trips));
+
+    showSavedTrips();
+
+}
 // =======================================
 // DARK MODE
 // =======================================
@@ -569,116 +572,3 @@ document.getElementById("themeToggle")
         : "🌙 Dark Mode";
 
 });
-// =======================================
-// FREE MAP (Leaflet + OpenStreetMap)
-// =======================================
-
-async function loadMap(place) {
-
-    const mapSection = document.getElementById("mapSection");
-
-    mapSection.classList.remove("hidden");
-
-
-    try {
-
-        // Convert place name to coordinates
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
-        );
-
-
-        const data = await response.json();
-
-
-        if (!data.length) {
-
-            alert("Location not found");
-            return;
-
-        }
-
-
-        const lat = Number(data[0].lat);
-        const lon = Number(data[0].lon);
-
-
-
-        // Create map first time
-        if (!map) {
-
-
-            map = L.map("map").setView(
-                [lat, lon],
-                13
-            );
-
-
-            L.tileLayer(
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-                    attribution:
-                    '&copy; OpenStreetMap contributors'
-                }
-            ).addTo(map);
-
-
-        }
-
-        else {
-
-
-            // Update existing map
-
-            map.setView(
-                [lat, lon],
-                13
-            );
-
-
-            if(marker){
-
-                map.removeLayer(marker);
-
-            }
-
-        }
-
-
-
-        // Add marker
-
-        marker = L.marker(
-            [lat, lon]
-        )
-        .addTo(map)
-        .bindPopup(
-            `📍 ${place}`
-        )
-        .openPopup();
-
-
-
-        // Fix hidden div issue
-
-        setTimeout(() => {
-
-            map.invalidateSize();
-
-        }, 300);
-
-
-
-    }
-
-
-    catch(error) {
-
-        console.log(
-            "Map Error:",
-            error
-        );
-
-    }
-
-}

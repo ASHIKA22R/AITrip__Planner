@@ -480,8 +480,6 @@ tbody tr:hover{
 
 }
 
-/* ================= Hotel Cards ================= */
-
 #hotelCards{
 
     margin-top:40px;
@@ -837,7 +835,7 @@ body.dark button{
 
 }
 
-/* ================= Scrollbar ================= */
+
 
 ::-webkit-scrollbar{
 
