@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Travel Planner</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<header>
+
+    <h1>
+        <i class="fa-solid fa-earth-asia"></i>
+        AI Travel Planner
+    </h1>
+
+    <p>
+        Create personalized AI powered travel itineraries
+    </p>
+
+</header>
+
+
+
+<!-- Controls -->
+
+<div class="top-controls">
+
+    <button id="themeToggle">
+        🌙 Dark Mode
+    </button>
+
+
+    <button id="viewTrips">
+        📂 Saved Trips
+    </button>
+
+</div>
+
+
+
+
+
+<!-- Travel Form -->
+
+<div class="form-container">
+
+
+<form id="travelForm">
+
+
+
+<div class="form-group">
+
+<label>
+Destination
+</label>
+
+<input
+type="text"
+id="destination"
+placeholder="Enter destination"
+required>
+
+</div>
+
+
+
+
+<div class="row">
+
+
+<div class="form-group">
+
+<label>
+Start Date
+</label>
+
+<input
+type="date"
+id="startDate"
+required>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label>
+End Date
+</label>
+
+<input
+type="date"
+id="endDate"
+required>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Budget
+</label>
+
+
+<select id="budget">
+
+<option value="Budget">
+💰 Budget
+</option>
+
+<option value="Standard">
+🏨 Standard
+</option>
+
+<option value="Luxury">
+✨ Luxury
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Number of Travelers
+</label>
+
+
+<input
+type="number"
+id="travelers"
+value="1"
+min="1"
+max="20">
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Trip Type
+</label>
+
+
+<select id="tripType">
+
+<option>
+Solo
+</option>
+
+<option>
+Couple
+</option>
+
+<option>
+Family
+</option>
+
+<option>
+Friends
+</option>
+
+<option>
+Business
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Transport
+</label>
+
+
+<select id="transport">
+
+
+<option>
+Flight
+</option>
+
+<option>
+Train
+</option>
+
+<option>
+Bus
+</option>
+
+<option>
+Car
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Hotel Category
+</label>
+
+
+<select id="hotel">
+
+
+<option>
+3-Star
+</option>
+
+
+<option>
+4-Star
+</option>
+
+
+<option>
+5-Star
+</option>
+
+
+<option>
+Homestay
+</option>
+
+
+<option>
+Resort
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<button type="submit">
+
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+
+Generate AI Itinerary
+
+</button>
+
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+
+<!-- Loading -->
+
+
+<div id="loading"
+class="loading hidden">
+
+
+<div class="spinner"></div>
+
+
+<p>
+Generating your personalized trip...
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- Dashboard -->
+
+
+<div id="dashboard"
+class="dashboard hidden">
+
+
+<div class="card">
+
+<h3>
+🌤 Weather
+</h3>
+
+<p id="weather">
+--
+</p>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+💰 Estimated Budget
+</h3>
+
+<p id="estimatedCost">
+--
+</p>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+🏨 Hotel
+</h3>
+
+<p id="hotelResult">
+--
+</p>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- Itinerary -->
+
+
+<div id="results"
+class="results hidden">
+
+
+<h2>
+📅 Travel Itinerary
+</h2>
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+<th>
+Day
+</th>
+
+
+<th>
+Time
+</th>
+
+
+<th>
+Activity
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody id="itineraryBody">
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Google Map -->
+
+
+<div id="mapSection"
+class="hidden">
+
+
+<h2>
+📍 Destination Map
+</h2>
+
+
+<div id="map">
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Hotels -->
+
+
+<div id="hotelCards"
+class="hidden">
+
+
+<h2>
+🏨 Recommended Hotels
+</h2>
+
+
+<div id="hotelContainer"
+class="hotel-container">
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Images -->
+
+
+<div id="destinationImages"
+class="hidden">
+
+
+<h2>
+🌄 Destination Gallery
+</h2>
+
+
+<div id="imageContainer"
+class="image-container">
+
+</div>
+
+
+</div>
+<!-- Buttons -->
+
+
+<div id="actionButtons"
+class="buttons hidden">
+
+
+<button id="downloadPdf">
+
+📄 Download PDF
+
+</button>
+
+
+
+<button id="saveTrip">
+
+💾 Save Trip
+
+</button>
+
+
+
+</div>
+<!-- Saved Trips -->
+
+
+<div id="savedTrips"
+class="saved-trips hidden">
+
+
+<h2>
+📂 Previous Trips
+</h2>
+
+
+<div id="tripList">
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- PDF Library -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+</script>
+
+
+
+<!-- Google Maps -->
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+
+
+
+
+<script src="script.js"></script>
+
+
+
+</body>
+
+</html>
