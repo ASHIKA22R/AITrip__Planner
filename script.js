@@ -222,12 +222,11 @@ async function loadMap(place) {
 
     try {
 
-        // Get coordinates
-       const response = await fetch(
-    `/api/geoapify?place=${encodeURIComponent(place)}`
-);
+        const response = await fetch(
+            `/api/geoapify?place=${encodeURIComponent(place)}`
+        );
 
-const data = await response.json();
+        const data = await response.json();
 
         if (!data.features.length) {
             alert("Location not found");
@@ -237,19 +236,25 @@ const data = await response.json();
         const lat = data.features[0].properties.lat;
         const lon = data.features[0].properties.lon;
 
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+            iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+            shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
+        });
+
         if (!map) {
 
             map = L.map("map").setView([lat, lon], 13);
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 100);
 
-          L.tileLayer(
-    `/api/geoapify-tile?z={z}&x={x}&y={y}`,
-    {
-        attribution: '&copy; <a href="https://www.geoapify.com/">Geoapify</a> © OpenStreetMap contributors'
-    }
-).addTo(map);
+            L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19
+                }
+            ).addTo(map);
+
         } else {
 
             map.setView([lat, lon], 13);
@@ -259,12 +264,7 @@ const data = await response.json();
             }
 
         }
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png"
-});
+
         marker = L.marker([lat, lon])
             .addTo(map)
             .bindPopup(`📍 ${place}`)
@@ -276,7 +276,7 @@ L.Icon.Default.mergeOptions({
 
     } catch (error) {
 
-        console.error("Geoapify Map Error:", error);
+        console.error("Map Error:", error);
 
     }
 
