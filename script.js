@@ -238,11 +238,11 @@ async function loadMap(place) {
     try {
 
         // Get coordinates
-        const response = await fetch(
-            `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(place)}&apiKey=${GEOAPIFY_API_KEY}`
-        );
+       const response = await fetch(
+    `/api/geoapify?place=${encodeURIComponent(place)}`
+);
 
-        const data = await response.json();
+const data = await response.json();
 
         if (!data.features.length) {
             alert("Location not found");
