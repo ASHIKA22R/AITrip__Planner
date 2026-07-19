@@ -446,30 +446,7 @@ tbody tr:hover{
 
 }
 
-#mapSection{
-    margin-top:40px;
-    animation:fadeIn .6s ease;
-}
 
-#mapSection h2{
-    text-align:center;
-    color:white;
-    margin-bottom:20px;
-}
-
-#map{
-    width:100%;
-    height:500px;
-    min-height:500px;
-    border-radius:20px;
-    overflow:hidden;
-    background:white;
-    box-shadow:0 15px 35px rgba(0,0,0,.25);
-    position:relative;
-    z-index:1;
-}
-
-/* Leaflet Fix */
 .leaflet-container{
     width:100%;
     height:100%;
@@ -852,11 +829,9 @@ body.dark button{
 #hotelCards,
 #destinationImages,
 .saved-trips,
-#mapSection{
 
-    animation:fadeIn .6s ease;
 
-}
+
 
 
 
@@ -885,8 +860,6 @@ body.dark button{
     background:#1d4ed8;
 
 }
-
-/* ================= Footer (Optional) ================= */
 
 footer{
 
