@@ -11,10 +11,6 @@ let marker;
 // Submit Form
 travelForm.addEventListener("submit", generateTrip);
 
-// =======================================
-// Generate Trip
-// =======================================
-
 async function generateTrip(e) {
 
     e.preventDefault();
@@ -115,9 +111,6 @@ Day 1 | 06:00 PM | Activity
 
 }
 
-// =======================================
-// Display Itinerary
-// =======================================
 
 function displayItinerary(text) {
 
@@ -187,9 +180,6 @@ function updateDashboard() {
         document.getElementById("hotel").value;
 
 }
-// =======================================
-// WEATHER (Vercel API)
-// =======================================
 
 async function getWeather(destination) {
 
@@ -250,15 +240,16 @@ const data = await response.json();
         if (!map) {
 
             map = L.map("map").setView([lat, lon], 13);
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
 
-            L.tileLayer(
-                `https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_API_KEY}`,
-                {
-                    attribution:
-                        '&copy; <a href="https://www.geoapify.com/">Geoapify</a> © OpenStreetMap contributors'
-                }
-            ).addTo(map);
-
+          L.tileLayer(
+    `/api/geoapify-tile?z={z}&x={x}&y={y}`,
+    {
+        attribution: '&copy; <a href="https://www.geoapify.com/">Geoapify</a> © OpenStreetMap contributors'
+    }
+).addTo(map);
         } else {
 
             map.setView([lat, lon], 13);
@@ -276,7 +267,7 @@ const data = await response.json();
 
         setTimeout(() => {
             map.invalidateSize();
-        }, 300);
+        }, 100);
 
     } catch (error) {
 
@@ -286,9 +277,6 @@ const data = await response.json();
 
 }
 
-// =======================================
-// HOTEL CARDS
-// =======================================
 
 function showHotels() {
 
@@ -342,9 +330,6 @@ function showHotels() {
 
 }
 
-// =======================================
-// DESTINATION IMAGES
-// =======================================
 
 async function loadImages(destination) {
 
@@ -387,9 +372,6 @@ async function loadImages(destination) {
     }
 
 }
-// =======================================
-// PDF DOWNLOAD
-// =======================================
 
 document.getElementById("downloadPdf")
 .addEventListener("click", generatePDF);
@@ -441,9 +423,6 @@ function generatePDF() {
 
 }
 
-// =======================================
-// SAVE TRIP
-// =======================================
 
 document.getElementById("saveTrip")
 .addEventListener("click", saveTrip);
@@ -476,10 +455,6 @@ function saveTrip() {
     alert("Trip Saved Successfully!");
 
 }
-
-// =======================================
-// VIEW SAVED TRIPS
-// =======================================
 
 document.getElementById("viewTrips")
 .addEventListener("click", showSavedTrips);
@@ -549,10 +524,6 @@ function deleteTrip(index) {
     showSavedTrips();
 
 }
-// =======================================
-// DARK MODE
-// =======================================
-
 document.getElementById("themeToggle")
 .addEventListener("click", () => {
 
