@@ -1,9 +1,51 @@
-
 const travelForm = document.getElementById("travelForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
 const itineraryBody = document.getElementById("itineraryBody");
 travelForm.addEventListener("submit", generateTrip);
+
+// --- Filter transport options based on Domestic / International ---
+function filterTransportOptions() {
+
+    const type = document.getElementById("destinationType").value;
+    const transport = document.getElementById("transport");
+    const domesticOptions = transport.querySelectorAll("[data-domestic]");
+
+    if (type === "international") {
+
+        domesticOptions.forEach(opt => {
+            opt.hidden = true;
+            opt.disabled = true;
+        });
+
+        // If a domestic-only option is currently selected, switch to Flight
+        if (transport.selectedOptions[0]?.hasAttribute("data-domestic")) {
+            transport.value = "Flight";
+        }
+
+    } else {
+
+        domesticOptions.forEach(opt => {
+            opt.hidden = false;
+            opt.disabled = false;
+        });
+
+    }
+
+}
+
+document.getElementById("destinationType")
+    .addEventListener("change", filterTransportOptions);
+
+// Run once on load so the form starts in the correct state
+filterTransportOptions();
+
+// --- Utility: safely escape a string for innerHTML injection ---
+function sanitize(str) {
+    const div = document.createElement("div");
+    div.textContent = String(str ?? "");
+    return div.innerHTML;
+}
 
 async function generateTrip(e) {
 
@@ -17,6 +59,7 @@ async function generateTrip(e) {
     const tripType = document.getElementById("tripType").value;
     const transport = document.getElementById("transport").value;
     const hotel = document.getElementById("hotel").value;
+    const destinationType = document.getElementById("destinationType").value;
 
     if (new Date(startDate) > new Date(endDate)) {
 
@@ -33,6 +76,8 @@ async function generateTrip(e) {
 Create a detailed travel itinerary.
 
 Destination: ${destination}
+
+Destination Type: ${destinationType === "international" ? "International (foreign country)" : "Domestic"}
 
 Travel Dates: ${startDate} to ${endDate}
 
@@ -88,11 +133,12 @@ Day 1 | 06:00 PM | Activity
 
         updateDashboard();
 
-        await getWeather(destination);
-
-        await loadImages(destination);
-
-        await loadMap(destination);
+        // Bug fix: run independent API calls in parallel instead of sequentially
+        await Promise.all([
+            getWeather(destination),
+            loadImages(destination),
+            loadMap(destination)
+        ]);
 
         showHotels();
 
@@ -128,11 +174,19 @@ function displayItinerary(text) {
 
         const row = document.createElement("tr");
 
-        row.innerHTML = `
-            <td>${parts[0].trim()}</td>
-            <td>${parts[1].trim()}</td>
-            <td>${parts[2].trim()}</td>
-        `;
+        // Bug fix: use textContent per cell to prevent XSS from AI-generated text
+        const dayCell = document.createElement("td");
+        dayCell.textContent = parts[0].trim();
+
+        const timeCell = document.createElement("td");
+        timeCell.textContent = parts[1].trim();
+
+        const activityCell = document.createElement("td");
+        activityCell.textContent = parts[2].trim();
+
+        row.appendChild(dayCell);
+        row.appendChild(timeCell);
+        row.appendChild(activityCell);
 
         itineraryBody.appendChild(row);
 
@@ -189,11 +243,11 @@ async function getWeather(destination) {
         const data = await response.json();
 
         document.getElementById("weather").innerHTML = `
-            ${data.weather}
+            ${sanitize(data.weather)}
             <br>
-            🌡 ${data.temperature}°C
+            🌡 ${sanitize(data.temperature)}°C
             <br>
-            💧 ${data.humidity}%
+            💧 ${sanitize(data.humidity)}%
         `;
 
     } catch (error) {
@@ -206,56 +260,75 @@ async function getWeather(destination) {
     }
 
 }
+
 let map;
 
-async function loadMap(place){
+// Bug fix: wrapped in try/catch so map errors don't bubble up to the
+// outer generateTrip catch and incorrectly show "Unable to generate itinerary"
+async function loadMap(place) {
 
-    document
-        .getElementById("mapSection")
-        .classList.remove("hidden");
+    try {
 
-    const response = await fetch(
+        document
+            .getElementById("mapSection")
+            .classList.remove("hidden");
 
-`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
+        );
 
-    );
+        const data = await response.json();
 
-    const data = await response.json();
+        if (data.length === 0) {
 
-    if(data.length === 0){
+            document.getElementById("mapSection").classList.add("hidden");
+            console.warn("Location not found on map:", place);
+            return;
 
-        alert("Location not found");
+        }
 
-        return;
+        const lat = Number(data[0].lat);
+        const lon = Number(data[0].lon);
+
+        // Bug fix: reuse the existing map instance with flyTo instead of
+        // destroy + recreate, which can silently fail on repeat searches
+        if (map) {
+
+            map.flyTo({ center: [lon, lat], zoom: 11 });
+
+            // Update the marker by recreating only the marker, not the whole map
+            new maplibregl.Marker()
+                .setLngLat([lon, lat])
+                .addTo(map);
+
+        } else {
+
+            map = new maplibregl.Map({
+
+                container: "map",
+
+                style: "https://demotiles.maplibre.org/style.json",
+
+                center: [lon, lat],
+
+                zoom: 11
+
+            });
+
+            new maplibregl.Marker()
+
+                .setLngLat([lon, lat])
+
+                .addTo(map);
+
+        }
+
+    } catch (error) {
+
+        console.error("Map error:", error);
+        document.getElementById("mapSection").classList.add("hidden");
 
     }
-
-    const lat = Number(data[0].lat);
-    const lon = Number(data[0].lon);
-
-    if(map){
-
-        map.remove();
-
-    }
-
-    map = new maplibregl.Map({
-
-        container:"map",
-
-        style:"https://demotiles.maplibre.org/style.json",
-
-        center:[lon, lat],
-
-        zoom:11
-
-    });
-
-    new maplibregl.Marker()
-
-        .setLngLat([lon, lat])
-
-        .addTo(map);
 
 }
 
@@ -263,8 +336,6 @@ function showHotels() {
 
     const container =
         document.getElementById("hotelContainer");
-
-    container.innerHTML = "";
 
     const hotels = [
 
@@ -288,25 +359,22 @@ function showHotels() {
 
     ];
 
-    hotels.forEach(hotel => {
-
-        container.innerHTML += `
+    // Bug fix: build HTML string first, then set innerHTML once (avoids repeated DOM re-parses)
+    container.innerHTML = hotels.map(hotel => `
 
         <div class="hotel-card">
 
-            <h3>${hotel.name}</h3>
+            <h3>${sanitize(hotel.name)}</h3>
 
-            <p>${hotel.rating}</p>
+            <p>${sanitize(hotel.rating)}</p>
 
-            <p>${hotel.price}</p>
+            <p>${sanitize(hotel.price)}</p>
 
             <p>Recommended for your trip</p>
 
         </div>
 
-        `;
-
-    });
+    `).join("");
 
     document.getElementById("hotelCards")
         .classList.remove("hidden");
@@ -329,20 +397,15 @@ async function loadImages(destination) {
         const container =
             document.getElementById("imageContainer");
 
-        container.innerHTML = "";
-
-        images.forEach(url => {
-
-            container.innerHTML += `
+        // Bug fix: build HTML string then assign once, not innerHTML += per image
+        container.innerHTML = images.map(url => `
 
                 <img
                     class="place-image"
-                    src="${url}"
-                    alt="${destination}">
+                    src="${sanitize(url)}"
+                    alt="${sanitize(destination)}">
 
-            `;
-
-        });
+            `).join("");
 
         document.getElementById("destinationImages")
             .classList.remove("hidden");
@@ -466,10 +529,9 @@ function showSavedTrips() {
     const trips =
         JSON.parse(localStorage.getItem("savedTrips")) || [];
 
-    container.innerHTML = "";
-
     if (trips.length === 0) {
 
+        // Bug fix: build HTML once, not via +=
         container.innerHTML = `
             <div class="trip-card">
                 No Saved Trips Found
@@ -478,29 +540,30 @@ function showSavedTrips() {
 
     } else {
 
-        trips.forEach((trip, index) => {
-
-            container.innerHTML += `
+        // Bug fix: use sanitize() on localStorage values to prevent stored-XSS,
+        // and build the full HTML string before assigning (avoids innerHTML += loop)
+        // Bug fix: use data-index attribute + event delegation instead of inline onclick
+        container.innerHTML = trips.map((trip, index) => `
 
             <div class="trip-card">
 
                 <h3>Trip ${index + 1}</h3>
 
-                <p>🌍 ${trip.destination}</p>
+                <p>🌍 ${sanitize(trip.destination)}</p>
 
-                <p>📅 ${trip.startDate} - ${trip.endDate}</p>
+                <p>📅 ${sanitize(trip.startDate)} - ${sanitize(trip.endDate)}</p>
 
-                <p>💰 ${trip.budget}</p>
+                <p>💰 ${sanitize(trip.budget)}</p>
 
-                <p>👥 ${trip.travelers} Travelers</p>
+                <p>👥 ${sanitize(trip.travelers)} Travelers</p>
 
-                <p>✈ ${trip.transport}</p>
+                <p>✈ ${sanitize(trip.transport)}</p>
 
-                <p>🏨 ${trip.hotel}</p>
+                <p>🏨 ${sanitize(trip.hotel)}</p>
 
                 <button
                     class="delete-btn"
-                    onclick="deleteTrip(${index})">
+                    data-index="${index}">
 
                     🗑 Delete
 
@@ -508,15 +571,24 @@ function showSavedTrips() {
 
             </div>
 
-            `;
-
-        });
+        `).join("");
 
     }
 
     section.classList.remove("hidden");
 
 }
+
+// Bug fix: event delegation on the container instead of per-card inline onclick
+document.getElementById("tripList").addEventListener("click", (e) => {
+
+    const btn = e.target.closest(".delete-btn");
+    if (!btn) return;
+
+    const index = Number(btn.dataset.index);
+    deleteTrip(index);
+
+});
 
 function deleteTrip(index) {
 
@@ -534,49 +606,32 @@ function deleteTrip(index) {
 
 }
 
+// Bug fix: merged the two duplicate themeToggle click listeners into one
 document.getElementById("themeToggle")
 .addEventListener("click", () => {
 
     document.body.classList.toggle("dark");
 
-    const button =
-        document.getElementById("themeToggle");
+    const isDark = document.body.classList.contains("dark");
 
-    if (document.body.classList.contains("dark")) {
+    document.getElementById("themeToggle").innerHTML =
+        isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 
-        button.innerHTML = "☀️ Light Mode";
-
-    } else {
-
-        button.innerHTML = "🌙 Dark Mode";
-
-    }
+    localStorage.setItem("theme", isDark ? "dark" : "light");
 
 });
 
+// Bug fix: restore theme on load AND sync button label
 window.addEventListener("load", () => {
 
-    if (localStorage.getItem("theme") === "dark") {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
 
         document.body.classList.add("dark");
 
         document.getElementById("themeToggle").innerHTML =
             "☀️ Light Mode";
-
-    }
-
-});
-
-document.getElementById("themeToggle")
-.addEventListener("click", () => {
-
-    if (document.body.classList.contains("dark")) {
-
-        localStorage.setItem("theme", "dark");
-
-    } else {
-
-        localStorage.setItem("theme", "light");
 
     }
 

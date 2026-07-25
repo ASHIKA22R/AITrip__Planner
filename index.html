@@ -8,17 +8,15 @@
 
     <title>AI Travel Planner</title>
 
-  
+
     <link rel="stylesheet" href="styles.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-  <link
-rel="stylesheet"
-href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
 
 
 
@@ -26,291 +24,288 @@ href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
 
 <body>
 
-<div class="container">
+    <div class="container">
 
 
-    <header>
+        <header>
 
-        <h1>
-            <i class="fa-solid fa-earth-asia"></i>
-            AI Travel Planner
-        </h1>
+            <h1>
+                <i class="fa-solid fa-earth-asia"></i>
+                AI Travel Planner
+            </h1>
 
-        <p>Create personalized AI-powered travel itineraries</p>
+            <p>Create personalized AI-powered travel itineraries</p>
 
-    </header>
+        </header>
 
-    <!-- Top Controls -->
+        <!-- Top Controls -->
 
-    <div class="top-controls">
+        <div class="top-controls">
 
-        <button id="themeToggle">
-            🌙 Dark Mode
-        </button>
-
-        <button id="viewTrips">
-            📂 Saved Trips
-        </button>
-
-    </div>
-
-    <div class="form-container">
-
-        <form id="travelForm">
-
-            <div class="form-group">
-
-                <label>Destination</label>
-
-                <input
-                    type="text"
-                    id="destination"
-                    placeholder="Enter destination"
-                    required>
-
-            </div>
-
-            <div class="row">
-
-                <div class="form-group">
-
-                    <label>Start Date</label>
-
-                    <input
-                        type="date"
-                        id="startDate"
-                        required>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>End Date</label>
-
-                    <input
-                        type="date"
-                        id="endDate"
-                        required>
-
-                </div>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Budget</label>
-
-                <select id="budget">
-
-                    <option value="Budget">💰 Budget</option>
-                    <option value="Standard">🏨 Standard</option>
-                    <option value="Luxury">✨ Luxury</option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Number of Travelers</label>
-
-                <input
-                    type="number"
-                    id="travelers"
-                    value="1"
-                    min="1"
-                    max="20">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Trip Type</label>
-
-                <select id="tripType">
-
-                    <option>Solo</option>
-                    <option>Couple</option>
-                    <option>Family</option>
-                    <option>Friends</option>
-                    <option>Business</option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Transport</label>
-
-                <select id="transport">
-
-                    <option>Flight</option>
-                    <option>Train</option>
-                    <option>Bus</option>
-                    <option>Car</option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Hotel Category</label>
-
-                <select id="hotel">
-
-                    <option>3-Star</option>
-                    <option>4-Star</option>
-                    <option>5-Star</option>
-                    <option>Homestay</option>
-                    <option>Resort</option>
-
-                </select>
-
-            </div>
-
-            <button type="submit">
-
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-
-                Generate AI Itinerary
-
+            <button id="themeToggle">
+                🌙 Dark Mode
             </button>
 
-        </form>
-
-    </div>
-
-    <div id="loading" class="loading hidden">
-
-        <div class="spinner"></div>
-
-        <p>Generating your personalized trip...</p>
-
-    </div>
-
-    <div id="dashboard" class="dashboard hidden">
-
-        <div class="card">
-
-            <h3>🌤 Weather</h3>
-
-            <p id="weather">--</p>
+            <button id="viewTrips">
+                📂 Saved Trips
+            </button>
 
         </div>
 
-        <div class="card">
+        <div class="form-container">
 
-            <h3>💰 Estimated Budget</h3>
+            <form id="travelForm">
 
-            <p id="estimatedCost">--</p>
+                <div class="form-group">
+
+                    <label>Destination</label>
+
+                    <input type="text" id="destination" placeholder="Enter destination" required>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group">
+
+                        <label>Start Date</label>
+
+                        <input type="date" id="startDate" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>End Date</label>
+
+                        <input type="date" id="endDate" required>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Budget</label>
+
+                    <select id="budget">
+
+                        <option value="Budget">💰 Budget</option>
+                        <option value="Standard">🏨 Standard</option>
+                        <option value="Luxury">✨ Luxury</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Number of Travelers</label>
+
+                    <input type="number" id="travelers" value="1" min="1" max="20">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Trip Type</label>
+
+                    <select id="tripType">
+
+                        <option>Solo</option>
+                        <option>Couple</option>
+                        <option>Family</option>
+                        <option>Friends</option>
+                        <option>Business</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Destination Type</label>
+
+                    <select id="destinationType">
+
+                        <option value="domestic">🏠 Domestic</option>
+                        <option value="international">✈️ International</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Transport</label>
+
+                    <select id="transport">
+
+                        <option value="Flight">✈️ Flight</option>
+                        <option value="Train" data-domestic>🚆 Train</option>
+                        <option value="Bus" data-domestic>🚌 Bus</option>
+                        <option value="Car">🚗 Car / Rental</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Hotel Category</label>
+
+                    <select id="hotel">
+
+                        <option>3-Star</option>
+                        <option>4-Star</option>
+                        <option>5-Star</option>
+                        <option>Homestay</option>
+                        <option>Resort</option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    Generate AI Itinerary
+
+                </button>
+
+            </form>
 
         </div>
 
-        <div class="card">
+        <div id="loading" class="loading hidden">
 
-            <h3>🏨 Hotel</h3>
+            <div class="spinner"></div>
 
-            <p id="hotelResult">--</p>
-
-        </div>
-
-    </div>
-
-    <div id="results" class="results hidden">
-
-        <h2>📅 Travel Itinerary</h2>
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Day</th>
-
-                    <th>Time</th>
-
-                    <th>Activity</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="itineraryBody">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <div id="mapSection" class="hidden">
-
-        <h2>📍 Destination Map</h2>
-
-        <div id="map"></div>
-
-    </div>
-
-    <div id="hotelCards" class="hidden">
-
-        <h2>🏨 Recommended Hotels</h2>
-
-        <div id="hotelContainer" class="hotel-container">
+            <p>Generating your personalized trip...</p>
 
         </div>
 
-    </div>
-    <div id="destinationImages" class="hidden">
+        <div id="dashboard" class="dashboard hidden">
 
-        <h2>🌄 Destination Gallery</h2>
+            <div class="card">
 
-        <div id="imageContainer" class="image-container">
+                <h3>🌤 Weather</h3>
+
+                <p id="weather">--</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>💰 Estimated Budget</h3>
+
+                <p id="estimatedCost">--</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>🏨 Hotel</h3>
+
+                <p id="hotelResult">--</p>
+
+            </div>
 
         </div>
 
-    </div>
-    <div id="actionButtons" class="buttons hidden">
+        <div id="results" class="results hidden">
 
-        <button id="downloadPdf">
-            📄 Download PDF
-        </button>
+            <h2>📅 Travel Itinerary</h2>
 
-        <button id="saveTrip">
-            💾 Save Trip
-        </button>
+            <table>
 
-    </div>
-    <div id="savedTrips" class="saved-trips hidden">
+                <thead>
 
-        <h2>📂 Previous Trips</h2>
+                    <tr>
 
-        <div id="tripList">
+                        <th>Day</th>
+
+                        <th>Time</th>
+
+                        <th>Activity</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="itineraryBody">
+
+                </tbody>
+
+            </table>
 
         </div>
 
+        <div id="mapSection" class="hidden">
+
+            <h2>📍 Destination Map</h2>
+
+            <div id="map"></div>
+
+        </div>
+
+        <div id="hotelCards" class="hidden">
+
+            <h2>🏨 Recommended Hotels</h2>
+
+            <div id="hotelContainer" class="hotel-container">
+
+            </div>
+
+        </div>
+        <div id="destinationImages" class="hidden">
+
+            <h2>🌄 Destination Gallery</h2>
+
+            <div id="imageContainer" class="image-container">
+
+            </div>
+
+        </div>
+        <div id="actionButtons" class="buttons hidden">
+
+            <button id="downloadPdf">
+                📄 Download PDF
+            </button>
+
+            <button id="saveTrip">
+                💾 Save Trip
+            </button>
+
+        </div>
+        <div id="savedTrips" class="saved-trips hidden">
+
+            <h2>📂 Previous Trips</h2>
+
+            <div id="tripList">
+
+            </div>
+
+        </div>
+
+        <footer>
+
+            <p>
+                © 2026 AI Travel Planner |
+                Built with using HTML, CSS & JavaScript
+            </p>
+
+        </footer>
+
     </div>
 
-    <footer>
 
-        <p>
-            © 2026 AI Travel Planner |
-            Built with using HTML, CSS & JavaScript
-        </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    </footer>
-
-</div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script
-src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js">
-</script>
-<script src="script.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js">
+    </script>
+    <script src="script.js"></script>
 
 </body>
 
