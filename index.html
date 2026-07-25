@@ -8,22 +8,29 @@
 
     <title>AI Travel Planner</title>
 
-    <!-- Styles -->
+    <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link
+rel="stylesheet"
+href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
+
+
 
 </head>
 
 <body>
 
 <div class="container">
+
+    <!-- Header -->
 
     <header>
 
@@ -32,11 +39,11 @@
             AI Travel Planner
         </h1>
 
-        <p>Create personalized AI powered travel itineraries</p>
+        <p>Create personalized AI-powered travel itineraries</p>
 
     </header>
 
-    <!-- Controls -->
+    <!-- Top Controls -->
 
     <div class="top-controls">
 
@@ -115,9 +122,9 @@
                 <input
                     type="number"
                     id="travelers"
+                    value="1"
                     min="1"
-                    max="20"
-                    value="1">
+                    max="20">
 
             </div>
 
@@ -179,7 +186,6 @@
         </form>
 
     </div>
-
     <!-- Loading -->
 
     <div id="loading" class="loading hidden">
@@ -195,23 +201,32 @@
     <div id="dashboard" class="dashboard hidden">
 
         <div class="card">
+
             <h3>🌤 Weather</h3>
+
             <p id="weather">--</p>
+
         </div>
 
         <div class="card">
+
             <h3>💰 Estimated Budget</h3>
+
             <p id="estimatedCost">--</p>
+
         </div>
 
         <div class="card">
+
             <h3>🏨 Hotel</h3>
+
             <p id="hotelResult">--</p>
+
         </div>
 
     </div>
 
-    <!-- Itinerary -->
+    <!-- Travel Itinerary -->
 
     <div id="results" class="results hidden">
 
@@ -224,46 +239,67 @@
                 <tr>
 
                     <th>Day</th>
+
                     <th>Time</th>
+
                     <th>Activity</th>
 
                 </tr>
 
             </thead>
 
-            <tbody id="itineraryBody"></tbody>
+            <tbody id="itineraryBody">
+
+            </tbody>
 
         </table>
 
     </div>
 
-    <!-- Hotels -->
+    <!-- Destination Map -->
+
+    <div id="mapSection" class="hidden">
+
+        <h2>📍 Destination Map</h2>
+
+        <div id="map"></div>
+
+    </div>
+    <!-- Recommended Hotels -->
 
     <div id="hotelCards" class="hidden">
 
         <h2>🏨 Recommended Hotels</h2>
 
-        <div id="hotelContainer" class="hotel-container"></div>
+        <div id="hotelContainer" class="hotel-container">
+
+        </div>
 
     </div>
 
-    <!-- Images -->
+    <!-- Destination Gallery -->
 
     <div id="destinationImages" class="hidden">
 
         <h2>🌄 Destination Gallery</h2>
 
-        <div id="imageContainer" class="image-container"></div>
+        <div id="imageContainer" class="image-container">
+
+        </div>
 
     </div>
 
-    <!-- Buttons -->
+    <!-- Action Buttons -->
 
     <div id="actionButtons" class="buttons hidden">
 
-        <button id="downloadPdf">📄 Download PDF</button>
+        <button id="downloadPdf">
+            📄 Download PDF
+        </button>
 
-        <button id="saveTrip">💾 Save Trip</button>
+        <button id="saveTrip">
+            💾 Save Trip
+        </button>
 
     </div>
 
@@ -273,20 +309,34 @@
 
         <h2>📂 Previous Trips</h2>
 
-        <div id="tripList"></div>
+        <div id="tripList">
+
+        </div>
 
     </div>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            © 2026 AI Travel Planner |
+            Built with ❤️ using HTML, CSS & JavaScript
+        </p>
+
+    </footer>
 
 </div>
 
 <!-- jsPDF -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Main Script -->
+<script
+src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js">
+</script>
 <script src="script.js"></script>
 
 </body>
+
 </html>

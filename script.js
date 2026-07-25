@@ -1,12 +1,20 @@
+// =======================================
+// AI Travel Planner
+// script.js - Part 1
+// =======================================
 
+// Elements
 const travelForm = document.getElementById("travelForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
 const itineraryBody = document.getElementById("itineraryBody");
 
-
-// Submit Form
+// Submit Event
 travelForm.addEventListener("submit", generateTrip);
+
+// =======================================
+// Generate Trip
+// =======================================
 
 async function generateTrip(e) {
 
@@ -22,8 +30,10 @@ async function generateTrip(e) {
     const hotel = document.getElementById("hotel").value;
 
     if (new Date(startDate) > new Date(endDate)) {
+
         alert("End Date should be after Start Date.");
         return;
+
     }
 
     loading.classList.remove("hidden");
@@ -34,21 +44,28 @@ async function generateTrip(e) {
 Create a detailed travel itinerary.
 
 Destination: ${destination}
+
 Travel Dates: ${startDate} to ${endDate}
+
 Budget: ${budget}
+
 Travelers: ${travelers}
+
 Trip Type: ${tripType}
+
 Transport: ${transport}
+
 Hotel: ${hotel}
 
 Include:
-- Morning
-- Afternoon
-- Evening
-- Food
+
+- Morning activities
+- Afternoon activities
+- Evening activities
+- Tourist attractions
+- Local food
 - Shopping
-- Attractions
-- Travel Tips
+- Travel tips
 
 Return ONLY this format:
 
@@ -92,9 +109,9 @@ Day 1 | 06:00 PM | Activity
 
     }
 
-    catch (err) {
+    catch (error) {
 
-        console.error(err);
+        console.error(error);
 
         alert("Unable to generate itinerary.");
 
@@ -108,6 +125,9 @@ Day 1 | 06:00 PM | Activity
 
 }
 
+// =======================================
+// Display Itinerary
+// =======================================
 
 function displayItinerary(text) {
 
@@ -144,20 +164,20 @@ function displayItinerary(text) {
 }
 
 // =======================================
-// Budget
+// Budget Calculation
 // =======================================
 
 function calculateBudget() {
 
-    const type = document.getElementById("budget").value;
+    const budget = document.getElementById("budget").value;
     const people = Number(document.getElementById("travelers").value);
 
     let amount = 15000;
 
-    if (type === "Standard")
+    if (budget === "Standard")
         amount = 30000;
 
-    if (type === "Luxury")
+    if (budget === "Luxury")
         amount = 60000;
 
     return "₹" + (amount * people).toLocaleString("en-IN");
@@ -177,6 +197,9 @@ function updateDashboard() {
         document.getElementById("hotel").value;
 
 }
+// =======================================
+// Weather API
+// =======================================
 
 async function getWeather(destination) {
 
@@ -199,11 +222,9 @@ async function getWeather(destination) {
             💧 ${data.humidity}%
         `;
 
-    }
+    } catch (error) {
 
-    catch (err) {
-
-        console.error(err);
+        console.error(error);
 
         document.getElementById("weather").innerHTML =
             "Weather unavailable";
@@ -212,7 +233,65 @@ async function getWeather(destination) {
 
 }
 
+// =======================================
+// MapLibre Map
+// =======================================
 
+let map;
+
+async function loadMap(place){
+
+    document
+        .getElementById("mapSection")
+        .classList.remove("hidden");
+
+    const response = await fetch(
+
+`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`
+
+    );
+
+    const data = await response.json();
+
+    if(data.length === 0){
+
+        alert("Location not found");
+
+        return;
+
+    }
+
+    const lat = Number(data[0].lat);
+    const lon = Number(data[0].lon);
+
+    if(map){
+
+        map.remove();
+
+    }
+
+    map = new maplibregl.Map({
+
+        container:"map",
+
+        style:"https://demotiles.maplibre.org/style.json",
+
+        center:[lon, lat],
+
+        zoom:11
+
+    });
+
+    new maplibregl.Marker()
+
+        .setLngLat([lon, lat])
+
+        .addTo(map);
+
+}
+// =======================================
+// Hotel Cards
+// =======================================
 
 function showHotels() {
 
@@ -246,17 +325,19 @@ function showHotels() {
     hotels.forEach(hotel => {
 
         container.innerHTML += `
-            <div class="hotel-card">
 
-                <h3>${hotel.name}</h3>
+        <div class="hotel-card">
 
-                <p>${hotel.rating}</p>
+            <h3>${hotel.name}</h3>
 
-                <p>${hotel.price}</p>
+            <p>${hotel.rating}</p>
 
-                <p>Recommended for your trip</p>
+            <p>${hotel.price}</p>
 
-            </div>
+            <p>Recommended for your trip</p>
+
+        </div>
+
         `;
 
     });
@@ -265,7 +346,9 @@ function showHotels() {
         .classList.remove("hidden");
 
 }
-
+// =======================================
+// Destination Images
+// =======================================
 
 async function loadImages(destination) {
 
@@ -288,10 +371,12 @@ async function loadImages(destination) {
         images.forEach(url => {
 
             container.innerHTML += `
+
                 <img
                     class="place-image"
                     src="${url}"
                     alt="${destination}">
+
             `;
 
         });
@@ -301,13 +386,17 @@ async function loadImages(destination) {
 
     }
 
-    catch (err) {
+    catch (error) {
 
-        console.error(err);
+        console.error(error);
 
     }
 
 }
+
+// =======================================
+// PDF Download
+// =======================================
 
 document.getElementById("downloadPdf")
 .addEventListener("click", generatePDF);
@@ -315,28 +404,39 @@ document.getElementById("downloadPdf")
 function generatePDF() {
 
     const { jsPDF } = window.jspdf;
+
     const doc = new jsPDF();
 
-    const destination = document.getElementById("destination").value;
-    const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
-    const budget = document.getElementById("budget").value;
-    const travelers = document.getElementById("travelers").value;
+    const destination =
+        document.getElementById("destination").value;
+
+    const startDate =
+        document.getElementById("startDate").value;
+
+    const endDate =
+        document.getElementById("endDate").value;
+
+    const budget =
+        document.getElementById("budget").value;
+
+    const travelers =
+        document.getElementById("travelers").value;
 
     doc.setFontSize(20);
-    doc.text("AI Travel Planner Report", 20, 20);
+    doc.text("AI Travel Planner", 20, 20);
 
     doc.setFontSize(12);
-    doc.text(`Destination : ${destination}`, 20, 40);
-    doc.text(`Dates : ${startDate} - ${endDate}`, 20, 50);
-    doc.text(`Budget : ${budget}`, 20, 60);
-    doc.text(`Travelers : ${travelers}`, 20, 70);
+    doc.text(`Destination: ${destination}`, 20, 40);
+    doc.text(`Dates: ${startDate} - ${endDate}`, 20, 50);
+    doc.text(`Budget: ${budget}`, 20, 60);
+    doc.text(`Travelers: ${travelers}`, 20, 70);
 
     doc.text("Travel Itinerary", 20, 90);
 
     let y = 105;
 
-    document.querySelectorAll("#itineraryBody tr").forEach(row => {
+    document.querySelectorAll("#itineraryBody tr")
+    .forEach(row => {
 
         const td = row.querySelectorAll("td");
 
@@ -349,8 +449,10 @@ function generatePDF() {
         y += 10;
 
         if (y > 280) {
+
             doc.addPage();
             y = 20;
+
         }
 
     });
@@ -359,6 +461,9 @@ function generatePDF() {
 
 }
 
+// =======================================
+// Save Trip
+// =======================================
 
 document.getElementById("saveTrip")
 .addEventListener("click", saveTrip);
@@ -388,9 +493,12 @@ function saveTrip() {
         JSON.stringify(trips)
     );
 
-    alert("Trip Saved Successfully!");
+    alert("Trip saved successfully!");
 
 }
+// =======================================
+// View Saved Trips
+// =======================================
 
 document.getElementById("viewTrips")
 .addEventListener("click", showSavedTrips);
@@ -410,67 +518,128 @@ function showSavedTrips() {
 
     if (trips.length === 0) {
 
-        container.innerHTML =
-        "<div class='trip-card'>No Saved Trips</div>";
+        container.innerHTML = `
+            <div class="trip-card">
+                No Saved Trips Found
+            </div>
+        `;
+
+    } else {
+
+        trips.forEach((trip, index) => {
+
+            container.innerHTML += `
+
+            <div class="trip-card">
+
+                <h3>Trip ${index + 1}</h3>
+
+                <p>🌍 ${trip.destination}</p>
+
+                <p>📅 ${trip.startDate} - ${trip.endDate}</p>
+
+                <p>💰 ${trip.budget}</p>
+
+                <p>👥 ${trip.travelers} Travelers</p>
+
+                <p>✈ ${trip.transport}</p>
+
+                <p>🏨 ${trip.hotel}</p>
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteTrip(${index})">
+
+                    🗑 Delete
+
+                </button>
+
+            </div>
+
+            `;
+
+        });
 
     }
-
-trips.forEach((trip, index) => {
-
-    container.innerHTML += `
-
-    <div class="trip-card">
-
-        <h3>Trip ${index + 1}</h3>
-
-        <p>🌍 ${trip.destination}</p>
-
-        <p>📅 ${trip.startDate} - ${trip.endDate}</p>
-
-        <p>💰 ${trip.budget}</p>
-
-        <p>👥 ${trip.travelers} Travelers</p>
-
-        <p>✈ ${trip.transport}</p>
-
-        <p>🏨 ${trip.hotel}</p>
-
-        <button class="delete-btn" onclick="deleteTrip(${index})">
-            🗑 Delete
-        </button>
-
-    </div>
-
-    `;
-
-});
 
     section.classList.remove("hidden");
 
 }
 
+// =======================================
+// Delete Trip
+// =======================================
+
 function deleteTrip(index) {
 
-    let trips = JSON.parse(localStorage.getItem("savedTrips")) || [];
+    let trips =
+        JSON.parse(localStorage.getItem("savedTrips")) || [];
 
     trips.splice(index, 1);
 
-    localStorage.setItem("savedTrips", JSON.stringify(trips));
+    localStorage.setItem(
+        "savedTrips",
+        JSON.stringify(trips)
+    );
 
     showSavedTrips();
 
 }
+
+// =======================================
+// Dark Mode
+// =======================================
+
 document.getElementById("themeToggle")
 .addEventListener("click", () => {
 
     document.body.classList.toggle("dark");
 
-    const btn =
+    const button =
         document.getElementById("themeToggle");
 
-    btn.innerHTML =
-        document.body.classList.contains("dark")
-        ? "☀️ Light Mode"
-        : "🌙 Dark Mode";
+    if (document.body.classList.contains("dark")) {
+
+        button.innerHTML = "☀️ Light Mode";
+
+    } else {
+
+        button.innerHTML = "🌙 Dark Mode";
+
+    }
+
+});
+
+// =======================================
+// Load Saved Theme
+// =======================================
+
+window.addEventListener("load", () => {
+
+    if (localStorage.getItem("theme") === "dark") {
+
+        document.body.classList.add("dark");
+
+        document.getElementById("themeToggle").innerHTML =
+            "☀️ Light Mode";
+
+    }
+
+});
+
+// Save Theme Preference
+
+document.getElementById("themeToggle")
+.addEventListener("click", () => {
+
+    if (document.body.classList.contains("dark")) {
+
+        localStorage.setItem("theme", "dark");
+
+    } else {
+
+        localStorage.setItem("theme", "light");
+
+    }
 
 });
