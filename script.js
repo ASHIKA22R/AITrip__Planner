@@ -1,20 +1,9 @@
-// =======================================
-// AI Travel Planner
-// script.js - Part 1
-// =======================================
 
-// Elements
 const travelForm = document.getElementById("travelForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
 const itineraryBody = document.getElementById("itineraryBody");
-
-// Submit Event
 travelForm.addEventListener("submit", generateTrip);
-
-// =======================================
-// Generate Trip
-// =======================================
 
 async function generateTrip(e) {
 
@@ -125,10 +114,6 @@ Day 1 | 06:00 PM | Activity
 
 }
 
-// =======================================
-// Display Itinerary
-// =======================================
-
 function displayItinerary(text) {
 
     itineraryBody.innerHTML = "";
@@ -163,10 +148,6 @@ function displayItinerary(text) {
 
 }
 
-// =======================================
-// Budget Calculation
-// =======================================
-
 function calculateBudget() {
 
     const budget = document.getElementById("budget").value;
@@ -184,10 +165,6 @@ function calculateBudget() {
 
 }
 
-// =======================================
-// Dashboard
-// =======================================
-
 function updateDashboard() {
 
     document.getElementById("estimatedCost").innerText =
@@ -197,9 +174,6 @@ function updateDashboard() {
         document.getElementById("hotel").value;
 
 }
-// =======================================
-// Weather API
-// =======================================
 
 async function getWeather(destination) {
 
@@ -232,11 +206,6 @@ async function getWeather(destination) {
     }
 
 }
-
-// =======================================
-// MapLibre Map
-// =======================================
-
 let map;
 
 async function loadMap(place){
@@ -289,9 +258,6 @@ async function loadMap(place){
         .addTo(map);
 
 }
-// =======================================
-// Hotel Cards
-// =======================================
 
 function showHotels() {
 
@@ -346,9 +312,6 @@ function showHotels() {
         .classList.remove("hidden");
 
 }
-// =======================================
-// Destination Images
-// =======================================
 
 async function loadImages(destination) {
 
@@ -393,10 +356,6 @@ async function loadImages(destination) {
     }
 
 }
-
-// =======================================
-// PDF Download
-// =======================================
 
 document.getElementById("downloadPdf")
 .addEventListener("click", generatePDF);
@@ -461,10 +420,6 @@ function generatePDF() {
 
 }
 
-// =======================================
-// Save Trip
-// =======================================
-
 document.getElementById("saveTrip")
 .addEventListener("click", saveTrip);
 
@@ -496,9 +451,6 @@ function saveTrip() {
     alert("Trip saved successfully!");
 
 }
-// =======================================
-// View Saved Trips
-// =======================================
 
 document.getElementById("viewTrips")
 .addEventListener("click", showSavedTrips);
@@ -566,10 +518,6 @@ function showSavedTrips() {
 
 }
 
-// =======================================
-// Delete Trip
-// =======================================
-
 function deleteTrip(index) {
 
     let trips =
@@ -585,10 +533,6 @@ function deleteTrip(index) {
     showSavedTrips();
 
 }
-
-// =======================================
-// Dark Mode
-// =======================================
 
 document.getElementById("themeToggle")
 .addEventListener("click", () => {
@@ -610,10 +554,6 @@ document.getElementById("themeToggle")
 
 });
 
-// =======================================
-// Load Saved Theme
-// =======================================
-
 window.addEventListener("load", () => {
 
     if (localStorage.getItem("theme") === "dark") {
@@ -626,8 +566,6 @@ window.addEventListener("load", () => {
     }
 
 });
-
-// Save Theme Preference
 
 document.getElementById("themeToggle")
 .addEventListener("click", () => {
