@@ -262,9 +262,8 @@ async function getWeather(destination) {
 }
 
 let map;
+let marker;
 
-// Bug fix: wrapped in try/catch so map errors don't bubble up to the
-// outer generateTrip catch and incorrectly show "Unable to generate itinerary"
 async function loadMap(place) {
 
     try {
@@ -290,38 +289,38 @@ async function loadMap(place) {
         const lat = Number(data[0].lat);
         const lon = Number(data[0].lon);
 
-        // Bug fix: reuse the existing map instance with flyTo instead of
-        // destroy + recreate, which can silently fail on repeat searches
         if (map) {
 
-            map.flyTo({ center: [lon, lat], zoom: 11 });
+            map.setView([lat, lon], 11);
 
-            // Update the marker by recreating only the marker, not the whole map
-            new maplibregl.Marker()
-                .setLngLat([lon, lat])
-                .addTo(map);
+            if (marker) {
+
+                marker.setLatLng([lat, lon]);
+
+            } else {
+
+                marker = L.marker([lat, lon]).addTo(map);
+
+            }
 
         } else {
 
-            map = new maplibregl.Map({
+            map = L.map("map").setView([lat, lon], 11);
 
-                container: "map",
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
 
-                style: "https://demotiles.maplibre.org/style.json",
-
-                center: [lon, lat],
-
-                zoom: 11
-
-            });
-
-            new maplibregl.Marker()
-
-                .setLngLat([lon, lat])
-
-                .addTo(map);
+            marker = L.marker([lat, lon]).addTo(map);
 
         }
+
+        marker.bindPopup(`<b>${sanitize(place)}</b>`).openPopup();
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
 
     } catch (error) {
 

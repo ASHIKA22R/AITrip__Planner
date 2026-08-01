@@ -237,15 +237,13 @@ tbody tr:hover{
     overflow:hidden;
     box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
-.maplibregl-map{
+.leaflet-container{
     width:100%;
     height:100%;
     border-radius:20px;
+    z-index:1;
 }
-.maplibregl-canvas{
-    border-radius:20px;
-}
-.maplibregl-popup-content{
+.leaflet-popup-content-wrapper{
     border-radius:10px;
 }
 #hotelCards{
